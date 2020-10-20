@@ -319,14 +319,16 @@ def main():
         a.test_dir = os.path.join(a.root_path, 'dataset', a.dataset_name, 'test')
         a.min_epochs = 299
         a.save_freq = 100
+        a.progress_freq = 100
         a.BETA = 0.001
     elif a.dataset_name.lower() == "maps" or a.dataset_name.lower() == "map":
         a.dataset_name = "maps"
         a.train_dir = os.path.join(a.root_path, 'dataset', a.dataset_name, 'train')
         a.valid_dir = os.path.join(a.root_path, 'dataset', a.dataset_name, 'valid')
         a.test_dir = os.path.join(a.root_path, 'dataset', a.dataset_name, 'test')
-        a.min_epochs = 299
-        a.save_freq = 100
+        a.min_epochs = 399
+        a.save_freq = 137
+        a.progress_freq = 137
         a.l1_weight = 20000.0
     elif a.dataset_name.lower() == "cars" or a.dataset_name.lower() == "car":
         a.dataset_name = "cars"
@@ -689,10 +691,9 @@ def main():
                              is_training_placeholder: True}
 
                 results = sess.run(fetches, feed_dict, options=options, run_metadata=run_metadata)
-                # print(results["global_step"])
+                results["global_step"] = sess.run(sv.global_step) - 1
                 train_epoch = math.ceil(results["global_step"] / train_examples.steps_per_epoch)
                 train_step = (results["global_step"] - 1) % train_examples.steps_per_epoch + 1
-                # import pdb; pdb.set_trace()
 
                 if should(a.summary_freq):
                     print("recording summary")
@@ -742,7 +743,6 @@ def main():
                                      is_training_placeholder: False}
                         results = sess.run(features_fetches, feed_dict)
 
-                        # import pdb; pdb.set_trace()
                         X_SharedFeat.append(np.reshape(results['sR_X2Y'], [a.batch_size, -1]))
                         Y_SharedFeat.append(np.reshape(results['sR_Y2X'], [a.batch_size, -1]))
 
