@@ -483,9 +483,9 @@ def main():
                     count += 1
 
         else:
-            # 9 Epochs are enough
+            # The model converges within 9~10 Epochs.
             start = time.time()
-            for epoch in range(9):
+            for epoch in range(10):
 
                 for step in range(train_steps_per_epoch):
                     def should(freq):
