@@ -51,7 +51,7 @@ parser.add_argument("--seed", type=int)
 parser.add_argument("--checkpoint", default=None, help="directory with checkpoint to resume training from or use for testing")
 
 parser.add_argument("--max_steps", type=int, help="number of training steps (0 to disable)")
-parser.add_argument("--max_epochs", type=int, help="number of training epochs")
+parser.add_argument("--max_epochs", type=int, default=10, help="number of training epochs")
 
 
 parser.add_argument("--summary_freq", type=int, default=30, help="update summaries every summary_freq steps")
@@ -483,9 +483,9 @@ def main():
                     count += 1
 
         else:
-            # The model converges within 9~10 Epochs.
             start = time.time()
-            for epoch in range(10):
+            # The model converges within 9~10 Epochs.
+            for epoch in range(a.max_epoch):
 
                 for step in range(train_steps_per_epoch):
                     def should(freq):
