@@ -75,11 +75,11 @@ python run_cross_vae.py --mode test --dataset_name <dataset_name> --root_path <r
 
 #### 5. Results
 
-<img src="table1.PNG" alt="table1" style="zoom:70%;" />
+<img src="table1.PNG" alt="table1" style="zoom:50%;" />
 
 
 
-<img src="table2.PNG" alt="table2" style="zoom:70%;" />
+<img src="table2.PNG" alt="table2" style="zoom:50%;" />
 
 
 
