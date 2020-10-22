@@ -490,8 +490,6 @@ def main():
                 for step in range(train_steps_per_epoch):
                     def should(freq):
                         return freq > 0 and ((step + 1) % freq == 0 or step == max_steps - 1)
-                    # def should_save(freq, train_step):
-                    #     return freq > 0 and ((train_step+1) % freq == 0 or step == max_steps - 1)
 
                     options = None
                     run_metadata = None
@@ -675,8 +673,6 @@ def main():
             assert gt_count.shape == mAP.shape
             mAP = mAP / gt_count
             print('The mAP@all for test_sketches is ' + str(np.mean(mAP)))
-
-            # assert mAP_og == np.mean(mAP)
 
             print("============================== Saving Model ==============================")
             saver.save(sess, os.path.join(a.output_dir, "model"), global_step=sv.global_step)

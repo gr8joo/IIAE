@@ -55,17 +55,6 @@ def create_zs_vae_model(inputsX, inputsY, inputsC, is_training, a):
         with tf.variable_scope("Y_encoder"):
             q_z_y_mean, q_z_y_logvar = create_zs_vae_individual_exclusive_encoder(inputsY, is_training, a)
             r_z_y_mean, r_z_y_logvar, rectifiedY = create_zs_vae_individual_shared_encoder(inputsY, is_training, a)
-    '''
-    else:
-        print("Shared Conv Encs")
-        with tf.variable_scope("X_encoder"):
-            q_z_x_mean, q_z_x_logvar, r_z_x_mean, r_z_x_logvar, rectifiedX = create_vae_individual_encoder(inputsX, is_training, a)
-            # q_z_x_mean, q_z_x_logvar, r_z_x_mean, r_z_x_logvar, rectifiedX = create_vae_individual_encoder_flat(inputsX, a)
-
-        with tf.variable_scope("Y_encoder"):
-            q_z_y_mean, q_z_y_logvar, r_z_y_mean, r_z_y_logvar, rectifiedY = create_vae_individual_encoder(inputsY, is_training, a)
-            # q_z_y_mean, q_z_y_logvar, r_z_y_mean, r_z_y_logvar, rectifiedY = create_vae_individual_encoder_flat(inputsY, a)
-    '''
 
     with tf.variable_scope("S_encoder"):
         q_z_s_mean, q_z_s_logvar = create_zs_vae_shared_encoder(rectifiedX, rectifiedY, is_training, a)
@@ -153,17 +142,6 @@ def create_zs_vae_model(inputsX, inputsY, inputsC, is_training, a):
     with tf.name_scope("kl_InterX_loss"):
         r_z_x_mean_flat = tf.reshape(r_z_x_mean, [a.batch_size, -1])
         r_z_x_logvar_flat = tf.reshape(r_z_x_logvar, [a.batch_size, -1])
-
-        '''# KL[ q(z1|z2,x) || p(z1|z2) ]
-        self.loss_kl1 = tf.reduce_mean(
-                            tf.reduce_sum(
-                                0.5 * (-1.0 -
-                                       self.logvars +
-                                       self.prior_logvars +
-                                       ((self.means - self.prior_means)**2 + tf.exp(self.logvars))/
-                                       tf.exp(self.prior_logvars)),
-                                axis=1))
-        '''
         kl_InterX_loss = tf.reduce_mean(
                             tf.reduce_sum(
                                 0.5 * (-1.0 - q_z_s_logvar_flat + r_z_x_logvar_flat
@@ -173,7 +151,6 @@ def create_zs_vae_model(inputsX, inputsY, inputsC, is_training, a):
     with tf.name_scope("kl_InterY_loss"):
         r_z_y_mean_flat = tf.reshape(r_z_y_mean, [a.batch_size, -1])
         r_z_y_logvar_flat = tf.reshape(r_z_y_logvar, [a.batch_size, -1])
-
         kl_InterY_loss = tf.reduce_mean(
                             tf.reduce_sum(
                                 0.5 * (-1.0 - q_z_s_logvar_flat + r_z_y_logvar_flat
@@ -236,39 +213,3 @@ def create_zs_vae_model(inputsX, inputsY, inputsC, is_training, a):
         joint_loss=ema.average(joint_loss),
         train=tf.group(update_losses, incr_global_step, joint_train),
     )
-
-
-def create_visual_analogy(sR, eR, auto_output, inputs, which_direction, is_training, a):
-        swapScoreBKG = 0
-        sR_Swap = []
-        eR_Swap = []
-        sel_auto = []
-
-        for i in range(0,a.batch_size):
-            if len(sR.get_shape().as_list()) < 3:
-                s_curr = tf.reshape(sR[i, :], [sR.shape[1]])
-            else:
-                s_curr = tf.reshape(sR[i,:],[sR.shape[1],sR.shape[2],sR.shape[3]])
-
-            # Take a random image from the batch, make sure it is different from current
-            bkg_ims_idx = random.randint(0,a.batch_size-1)
-            while bkg_ims_idx == i:
-                bkg_ims_idx = random.randint(0,a.batch_size-1)
-
-            ex_rnd = tf.reshape(eR[bkg_ims_idx,:],[eR.shape[1]])
-            sR_Swap.append(s_curr)
-            eR_Swap.append(ex_rnd)
-
-            # Store also selected reference image for visualization
-            sel_auto.append(inputs[bkg_ims_idx,:])
-
-        with tf.variable_scope(which_direction + "_decoder", reuse=True):
-                    out_channels = int(auto_output.get_shape()[-1])
-                    im_swapped = create_vae_decoder(tf.stack(sR_Swap),
-                                                    tf.stack(eR_Swap),
-                                                    out_channels,
-                                                    is_training,
-                                                    a)
-        return im_swapped, tf.stack(sel_auto)
-
-
