@@ -16,9 +16,6 @@ import time
 from ops import *
 from encoder import *
 from decoder import *
-# from decoderExclusive import *
-# from discriminatorWGANGP import *
-
 
 
 Model = collections.namedtuple("Model", "outputsX, outputsY,\
@@ -58,8 +55,6 @@ def create_zs_vae_model(inputsX, inputsY, inputsC, is_training, a):
 
     with tf.variable_scope("S_encoder"):
         q_z_s_mean, q_z_s_logvar = create_zs_vae_shared_encoder(rectifiedX, rectifiedY, is_training, a)
-        # q_z_s_mean, q_z_s_logvar = create_zs_vae_shared_encoder(inputsX, inputsY, is_training, a)
-
 
 
     # random noise for posterior distributions
@@ -83,7 +78,6 @@ def create_zs_vae_model(inputsX, inputsY, inputsC, is_training, a):
     r_z_x_logvar = tf.math.minimum(r_z_x_logvar, 9.21035)
     r_z_y_logvar = tf.math.minimum(r_z_y_logvar, 9.21035)
 
-
     if a.mode == "train":
         # (Make sure) stochasticity applies only to the training phase
         z_x += tf.exp(0.5 * q_z_x_logvar) * eps_x
@@ -92,7 +86,6 @@ def create_zs_vae_model(inputsX, inputsY, inputsC, is_training, a):
 
 
     ########## Img_Decoders ##########
-    # One copy of the decoder for the noise input, the second copy for the correct the cross-domain autoencoder
     with tf.name_scope("X_decoder_noise"):
         with tf.variable_scope("X_decoder"):
             out_channels = int(inputsX.get_shape()[-1])
@@ -169,7 +162,6 @@ def create_zs_vae_model(inputsX, inputsY, inputsC, is_training, a):
 
 
     ######### OPTIMIZERS
-
     update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
     with tf.name_scope("joint_train"):
         with tf.control_dependencies(update_ops):
@@ -187,8 +179,6 @@ def create_zs_vae_model(inputsX, inputsY, inputsC, is_training, a):
                                recon_C_loss,
                                joint_loss])
 
-    # global_step = tf.train.get_or_create_global_step()
-    # incr_global_step = tf.assign(global_step, global_step+1)
     return Model(
         outputsX=outputsX,
         outputsY=outputsY,

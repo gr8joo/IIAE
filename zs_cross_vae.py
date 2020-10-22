@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -450,8 +449,6 @@ def main():
             mAP = mAP / gt_count
             print('The mAP@all for test_sketches is ' + str(np.mean(mAP)))
 
-            # assert mAP_og == np.mean(mAP)
-
             ##### Phase 6: Retrieval
             test_sketch_paths = np.load(os.path.join(feature_path, 'split1', 'test_sketch_paths.npy'))
             test_image_paths = np.load(os.path.join(feature_path, 'split1', 'test_image_paths.npy'))
@@ -545,9 +542,6 @@ def main():
                         sv.summary_writer.add_run_metadata(run_metadata, "step_%d" % results["global_step"])
 
                     if should(a.progress_freq):
-                        # global_step will have the correct step count if we resume from a checkpoint
-                        # train_epoch = math.ceil(results["global_step"] / train_teps_per_epoch)
-                        # train_step = (results["global_step"] - 1) % train_steps_per_epoch + 1
                         rate = (step + 1) * a.batch_size / (time.time() - start)
                         remaining = (max_steps - step) * a.batch_size / rate
                         print("progress  epoch %d  step %d  image/sec %0.1f  remaining %dm" % (train_epoch, train_step, rate, remaining / 60))

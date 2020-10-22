@@ -16,9 +16,6 @@ import time
 from ops import *
 from encoder import *
 from decoder import *
-# from decoderExclusive import *
-# from discriminatorWGANGP import *
-
 
 
 Model = collections.namedtuple("Model", "outputsX, outputsY, outputsXp, outputsYp, outputsXpp, outputsYpp, outputsXppp, outputsYppp, outputsXun, outputsYun,\
@@ -108,11 +105,9 @@ def create_vae_model(inputsX, inputsY, is_training, a):
     q_z_s_logvar = tf.math.minimum(q_z_s_logvar, 9.21035)
     r_z_x_logvar = tf.math.minimum(r_z_x_logvar, 9.21035)
     r_z_y_logvar = tf.math.minimum(r_z_y_logvar, 9.21035)
+
     if a.mode == "train":
         # (Make sure) stochasticity applies only to the training phase
-        # q_z_x_logvar = tf.sigmoid(q_z_x_logvar)
-        # q_z_y_logvar = tf.sigmoid(q_z_y_logvar)
-        # q_z_s_logvar = tf.sigmoid(q_z_s_logvar)
         z_x += tf.exp(0.5 * q_z_x_logvar) * eps_x
         z_y += tf.exp(0.5 * q_z_y_logvar) * eps_y
         z_s += tf.exp(0.5 * q_z_s_logvar) * eps_s
@@ -206,16 +201,6 @@ def create_vae_model(inputsX, inputsY, is_training, a):
         r_z_x_mean_flat = tf.reshape(r_z_x_mean, [a.batch_size, -1])
         r_z_x_logvar_flat = tf.reshape(r_z_x_logvar, [a.batch_size, -1])
 
-        '''# KL[ q(z1|z2,x) || p(z1|z2) ]
-        self.loss_kl1 = tf.reduce_mean(
-                            tf.reduce_sum(
-                                0.5 * (-1.0 -
-                                       self.logvars +
-                                       self.prior_logvars +
-                                       ((self.means - self.prior_means)**2 + tf.exp(self.logvars))/
-                                       tf.exp(self.prior_logvars)),
-                                axis=1))
-        '''
         kl_InterX_loss = tf.reduce_mean(
                             tf.reduce_sum(
                                 0.5 * (-1.0 - q_z_s_logvar_flat + r_z_x_logvar_flat
@@ -260,8 +245,6 @@ def create_vae_model(inputsX, inputsY, is_training, a):
                                kl_InterX_loss, kl_InterY_loss,
                                joint_loss])
 
-    # global_step = tf.train.get_or_create_global_step()
-    # incr_global_step = tf.assign(global_step, global_step+1)
     return Model(
         outputsX=outputsX,
         outputsY=outputsY,

@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -256,8 +255,6 @@ def save_features(fetches, step=None):
                              'sR_Y2X_logvar':fetches["sR_Y2X_logvar"][i],
                              'eR_X2Y_logvar':fetches["eR_X2Y_logvar"][i],
                              'eR_Y2X_logvar':fetches["eR_Y2X_logvar"][i]})
-
-
     return filesets
 
 
@@ -279,14 +276,10 @@ def append_index(filesets, step=False):
             index.write("<td>%d</td>" % fileset["step"])
         index.write("<td>%s</td>" % fileset["name"])
 
-        # all_kinds = ["inputsX", "outputsX", "outputsXp", "outputsXpp", "outputsX_fromX", "outputsX_fromY", "im_swapped_X", "sel_auto_X",
-        #              "inputsY", "outputsY", "outputsYp", "outputsYpp", "outputsY_fromY", "outputsY_fromX", "im_swapped_Y", "sel_auto_Y"]
         all_kinds = ["inputsX", "outputsX", "outputsXp", "outputsXpp", "outputsXppp", "outputsX_fromY",
                      "im_swapped_X", "sel_auto_X",
                      "inputsY", "outputsY", "outputsYp", "outputsYpp", "outputsYppp", "outputsY_fromX",
                      "im_swapped_Y", "sel_auto_Y"]
-
-
 
         for kind in all_kinds:
             index.write("<td><img src='images/%s'></td>" % fileset[kind])
@@ -369,8 +362,6 @@ def main():
     with open(os.path.join(a.output_dir, "options.json"), "w") as f:
         f.write(json.dumps(vars(a), sort_keys=True, indent=4))
 
-    # examples = load_examples()
-    # print("examples count = %d" % examples.count)
 
     train_examples = load_examples(type='train')
     valid_examples = load_examples(type='valid')
@@ -379,9 +370,6 @@ def main():
     print("Valid examples count = %d" % valid_examples.count)
     print("Test examples count = %d" % test_examples.count)
 
-    # inputs and targets are [batch_size, height, width, channels]
-    # model = create_vae_model(examples.inputsX, examples.inputsY, a)
-
 
     inputsX_placeholder = tf.placeholder(tf.float32, shape=[a.batch_size, 256, 256, 3], name='inputsX_placeholder')
     inputsY_placeholder = tf.placeholder(tf.float32, shape=[a.batch_size, 256, 256, 3], name='inputsY_placeholder')
@@ -389,8 +377,6 @@ def main():
     model = create_vae_model(inputsX_placeholder, inputsY_placeholder, is_training_placeholder, a)
 
     # undo colorization splitting on images that we use for display/output
-    # inputsX = deprocess(examples.inputsX)
-    # inputsY = deprocess(examples.inputsY)
     inputsX = deprocess(inputsX_placeholder)
     inputsY = deprocess(inputsY_placeholder)
     outputsX = deprocess(model.outputsX)
@@ -401,8 +387,6 @@ def main():
     outputsYpp = deprocess(model.outputsYpp)
     outputsXppp = deprocess(model.outputsXppp)
     outputsYppp = deprocess(model.outputsYppp)
-    outputsXun = deprocess(model.outputsXun)
-    outputsYun = deprocess(model.outputsYun)
     outputsX_fromX = deprocess(model.outputsX_fromX)
     outputsX_fromY = deprocess(model.outputsX_fromY)
     outputsY_fromY = deprocess(model.outputsY_fromY)
@@ -464,12 +448,6 @@ def main():
 
     with tf.name_scope("convert_outputsYppp"):
         converted_outputsYppp= convert(outputsYppp)
-
-    # with tf.name_scope("convert_outputsXun"):
-    #     converted_outputsXun= convert(outputsXun)
-
-    # with tf.name_scope("convert_outputsYun"):
-    #     converted_outputsYun= convert(outputsYun)
 
     with tf.name_scope("convert_outputsX_fromX"):
         converted_outputsX_fromX = convert(outputsX_fromX)
