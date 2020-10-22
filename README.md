@@ -1,6 +1,6 @@
 # Variational Interaction Information Maximization for Cross-domain Disentanglement
 
-![IIAE](IIAE.PNG)
+<img src="IIAE.PNG" alt="IIAE" style="zoom:50%;" />
 
 
 
@@ -75,11 +75,11 @@ python run_cross_vae.py --mode test --dataset_name <dataset_name> --root_path <r
 
 #### 5. Results
 
-![table1](table1.PNG)
+<img src="table1.PNG" alt="table1" style="zoom:70%;" />
 
 
 
-![table2](table2.PNG)
+<img src="table2.PNG" alt="table2" style="zoom:70%;" />
 
 
 
