@@ -170,8 +170,6 @@ def create_zs_vae_model(inputsX, inputsY, inputsC, is_training, a):
             joint_grads_and_vars = joint_optim.compute_gradients(joint_loss, var_list=joint_tvars)
             joint_train = joint_optim.apply_gradients(joint_grads_and_vars)
 
-
-    # TODO: it has to be checked if ema affects training loss or not.
     ema = tf.train.ExponentialMovingAverage(decay=0.99)
     update_losses = ema.apply([recon_X_loss, recon_Y_loss,
                                kl_X_loss, kl_Y_loss, kl_S_loss,
