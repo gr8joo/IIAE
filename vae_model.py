@@ -228,7 +228,6 @@ def create_vae_model(inputsX, inputsY, is_training, a):
 
 
     ######### OPTIMIZERS
-
     update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
     with tf.name_scope("joint_train"):
         with tf.control_dependencies(update_ops):
@@ -237,8 +236,6 @@ def create_vae_model(inputsX, inputsY, is_training, a):
             joint_grads_and_vars = joint_optim.compute_gradients(joint_loss, var_list=joint_tvars)
             joint_train = joint_optim.apply_gradients(joint_grads_and_vars)
 
-
-    # TODO: it has to be checked if ema affects training loss or not.
     ema = tf.train.ExponentialMovingAverage(decay=0.99)
     update_losses = ema.apply([recon_X_loss, recon_Y_loss,
                                kl_X_loss, kl_Y_loss, kl_S_loss,
