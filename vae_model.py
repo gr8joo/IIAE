@@ -114,7 +114,6 @@ def create_vae_model(inputsX, inputsY, is_training, a):
 
 
     ########## Img_Decoders ##########
-    # One copy of the decoder for the noise input, the second copy for the correct the cross-domain autoencoder
     with tf.name_scope("X_decoder_noise"):
         with tf.variable_scope("X_decoder"):
             out_channels = int(inputsX.get_shape()[-1])
