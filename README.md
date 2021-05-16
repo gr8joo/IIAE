@@ -75,11 +75,11 @@ python run_cross_vae.py --mode test --dataset_name <dataset_name> --root_path <r
 
 #### 5. Results
 
-<img src="imgs/table1.PNG" alt="table1" style="zoom:100%;" />
+<img src="imgs/table1.PNG" alt="table1" style="zoom:50%;" />
 
 
 
-<img src="imgs/table2.PNG" alt="table2" style="zoom:100%;" />
+<img src="imgs/table2.PNG" alt="table2" style="zoom:50%;" />
 
 
 
@@ -91,3 +91,20 @@ The VGG features of Sketchy dataset are extracted using pretrained VGG model pro
 
 Raw files of Cars dataset can be found [here](http://www-personal.umich.edu/~reedscot/files/).
 
+#### 7. References
+
+If this repository helps you in your academic research, you are encouraged to cite our paper. Here is an example bibtex:
+
+```bibtex
+@inproceedings{HwangEtal.NeurIPS2020,
+    author = {Hwang, HyeongJoo and Kim, Geon-Hyeong and Hong, Seunghoon and Kim, Kee-Eung},
+    booktitle = {Advances in Neural Information Processing Systems},
+    editor = {H. Larochelle and M. Ranzato and R. Hadsell and M. F. Balcan and H. Lin},
+    pages = {22479--22491},
+    publisher = {Curran Associates, Inc.},
+    title = {Variational Interaction Information Maximization for Cross-domain Disentanglement},
+    url = {https://proceedings.neurips.cc/paper/2020/file/fe663a72b27bdc613873fbbb512f6f67-Paper.pdf},
+    volume = {33},
+    year = {2020}
+}
+```
